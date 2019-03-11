@@ -84,7 +84,7 @@ module.exports = function (app, watchFile, conf = {}) {
     // => GET /api/:owner/:repo/raw/:ref/*
     const containMockURL = Object.keys(proxy).filter(function (kname) {
       const replaceStr = /\*$/.test(kname) ? '' : '$';
-      return (new RegExp('^' + kname.replace(/(:\S*)[^/]/ig, '(\\S*)[^/]') + replaceStr)).test(proxyURL);
+      return (new RegExp('^' + kname.replace(/(:[\s\S]*?(?=\/))/ig, '(\\S*)[^/]') + replaceStr)).test(proxyURL);
     });
 
     if (proxy[proxyURL] || (containMockURL && containMockURL.length > 0)) {
@@ -106,8 +106,8 @@ module.exports = function (app, watchFile, conf = {}) {
             if (mockURL && mockURL.length === 2 && req.method === mockURL[0]) {
               const route = pathMatch({
                 sensitive: false,
-                strict: false,
-                end: false,
+                strict: true,
+                end: true,
               });
               const match = route(mockURL[1]);
               req.params = match(parse(req.url).pathname);
