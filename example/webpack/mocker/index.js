@@ -96,6 +96,15 @@ const proxy = {
     console.log('--2-->', req.body)
     console.log('--3-->', req.params.id)
     res.send({ status: 'ok', message: '删除成功！' });
+  },
+  'GET /calculations/:constructionObjectId/items/:cashFlowItemGroupId/calculations/:calculationId': (req, res) => {
+    console.log('=====')
+    const data = generateCalculation()
+    return res.json(data)
+  },
+  'GET /calculations/:constructionObjectId/items/:cashFlowItemGroupId/units/:unitId/expenses': (req, res) => {
+    const works = Array.from(Array(chance.natural({ min: 1, max: 3 })), generateWork)
+    return res.json({ works })
   }
 }
 module.exports = (noProxy ? {} : delay(proxy, 1000));
